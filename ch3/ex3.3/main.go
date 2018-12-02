@@ -32,8 +32,8 @@ func main() {
 				!isFinite(cx) || !isFinite(cy) || !isFinite(dx) || !isFinite(dy) {
 				continue
 			}
-			fmt.Printf("<polygon points='%g,%g %g,%g %g,%g %g,%g'/>\n",
-				ax, ay, bx, by, cx, cy, dx, dy)
+			fmt.Printf("<polygon style='fill: %s' points='%g,%g %g,%g %g,%g %g,%g'/>\n",
+				color(i, j), ax, ay, bx, by, cx, cy, dx, dy)
 		}
 	}
 	fmt.Printf("</svg>")
@@ -60,4 +60,30 @@ func corner(i, j int) (float64, float64) {
 func f(x, y float64) float64 {
 	r := math.Hypot(x, y) // distance from (0, 0)
 	return math.Sin(r) / r
+}
+
+func color(i, j int) string {
+	min := math.NaN()
+	max := math.NaN()
+	for xoff := 0; xoff <= 1; xoff++ {
+		for yoff := 0; yoff <= 1; yoff++ {
+			x := xyrange * (float64(i+xoff)/cells - 0.5)
+			y := xyrange * (float64(j+yoff)/cells - 0.5)
+			z := f(x, y)
+			if math.IsNaN(min) || z < min {
+				min = z
+			}
+			if math.IsNaN(max) || z > max {
+				max = z
+			}
+		}
+	}
+
+	color := ""
+	if math.Abs(max) > math.Abs(min) {
+		color = fmt.Sprintf("#%02x0000", 255)
+	} else {
+		color = fmt.Sprintf("#0000%02x", 255)
+	}
+	return color
 }
