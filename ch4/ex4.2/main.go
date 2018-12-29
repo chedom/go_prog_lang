@@ -16,11 +16,14 @@ func main() {
 	mySet.StringVar(&methodStr, "m", "256", "sha method")
 	mySet.Parse(os.Args[1:])
 	var result []byte
-	switch os.Args[1] {
+	switch methodStr {
 	case "256":
+		r := sha256.Sum256([]byte(os.Args[2]))
+		result = r[:]
+	case "384":
 		r := sha512.Sum384([]byte(os.Args[2]))
 		result = r[:]
-	case "s2":
+	case "512":
 		r := sha512.Sum512([]byte(os.Args[2]))
 		result = r[:]
 	default:

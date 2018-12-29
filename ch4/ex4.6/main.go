@@ -9,8 +9,8 @@ import (
 )
 
 func main() {
-	b := []byte("abc\r  \n\rdef")
-	fmt.Printf("%q\n", string(squashSpaces(b)))
+	b := []byte("l\nbc\r  \n\rdef")
+	fmt.Printf("%q\n", squashSpaces(b))
 	fmt.Printf("%q\n", b)
 }
 
@@ -18,17 +18,14 @@ func squashSpaces(s []byte) []byte {
 	n := 0
 	for i := 0; i < len(s); {
 		v, size := utf8.DecodeRune(s[i:])
-		i += size
 		if !unicode.IsSpace(v) {
-			n++
-			utf8.EncodeRune(s[n:n+size], v)
-		} else if s[n] == ' ' {
-			continue
+			utf8.EncodeRune(s[n:], v)
+			n += size
 		} else {
-			n++
 			s[n] = ' '
+			n++
 		}
 		i += size
 	}
-	return s[:n+1]
+	return s[:n]
 }
