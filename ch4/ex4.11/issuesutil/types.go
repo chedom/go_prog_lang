@@ -5,18 +5,19 @@ package issuesutil
 import "time"
 
 const SearchIssueURL = "https://api.github.com/search/issues"
-const ReadIssueURL = "https://api.github.com/repos/:owner/:repo/issues/:number"
 const CreateIssueURL = "https://api.github.com/repos/:owner/:repo/issues"
+const ReadIssueURL = "https://api.github.com/repos/:owner/:repo/issues/:number"
 const UpdateIssueURL = "https://api.github.com/repos/:owner/:repo/issues/:number"
+const DeleteIssueURL = "https://api.github.com/repos/:owner/:repo/issues/:number/lock"
+const DefaultEditor = "vim"
 
 type IssueBodyRequest struct {
 	Title     string
 	Body      string
-	assignee  string
 	Milestone int
-	State     string
 	Labels    []string
 	Assignees []string
+	State     string
 }
 
 type Issue struct {
