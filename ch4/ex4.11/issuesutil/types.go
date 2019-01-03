@@ -12,12 +12,12 @@ const DeleteIssueURL = "https://api.github.com/repos/:owner/:repo/issues/:number
 const DefaultEditor = "vim"
 
 type IssueBodyRequest struct {
-	Title     string
-	Body      string
-	Milestone int
-	Labels    []string
-	Assignees []string
-	State     string
+	Title     string   `json:"title"`
+	Body      string   `json:"body,omitempty"`
+	Milestone int      `json:"milestone,omitempty"`
+	Labels    []string `json:"labels,omitempty"`
+	Assignees []string `json:"assignees,omitempty"`
+	State     string   `json:"state,omitempty"`
 }
 
 type Issue struct {

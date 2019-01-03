@@ -77,6 +77,7 @@ func makeRequest(url, httpMethod string, body io.Reader) ([]byte, error) {
 		return nil, err
 	}
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "token 93143d4588a53e7a340c22da3247ae705e6efa4f")
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -84,7 +85,7 @@ func makeRequest(url, httpMethod string, body io.Reader) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode < 300 {
 		return nil, fmt.Errorf("request failed: %s", resp.Status)
 	}
 	b, err := ioutil.ReadAll(resp.Body)
@@ -118,30 +119,6 @@ func GetIssue(owner, repo, number string) (*Issue, error) {
 	return &result, nil
 }
 
-func createAnIssueRequest(owner, repo string, body *IssueBodyRequest) (*Issue, error) {
-	replacement := map[string]string{
-		"owner": owner,
-		"repo":  repo,
-	}
-	url := replaceUrlParts(CreateIssueURL, replacement)
-	serialized, _ := json.Marshal(body)
-	resp, err := http.Post(url, "application/json", bytes.NewReader(serialized))
-	defer resp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("create issue failed %s", resp.Status)
-	}
-
-	var result Issue
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
-	}
-	return &result, nil
-}
-
 func CreateAnIssue(owner, repo string) {
 	issue, err := getIssueFromFile()
 	if err != nil {
@@ -152,8 +129,18 @@ func CreateAnIssue(owner, repo string) {
 		"repo":  repo,
 	}
 	url := replaceUrlParts(CreateIssueURL, replacement)
+	fmt.Println("url", url)
 	serialized, _ := json.Marshal(issue)
-	makeRequest(url, http.MethodPost, bytes.NewReader(serialized))
+	fmt.Println("string serialized", string(serialized))
+	resp, err := makeRequest(url, http.MethodPost, bytes.NewReader(serialized))
+	if err != nil {
+		log.Fatal(err)
+	}
+	var result Issue
+	if err = json.NewDecoder(bytes.NewReader(resp)).Decode(&result); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(result.Number)
 }
 
 func ReadAnIssue(owner, repo, number string) {

@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	issuesutil.GetIssueFromFile()
+	issuesutil.CreateAnIssue("chedom", "programming_in_haskell")
 }
