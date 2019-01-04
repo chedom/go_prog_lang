@@ -70,14 +70,16 @@ func getIssueFromFile() (*IssueBodyRequest, error) {
 	return result, err
 }
 
-func makeRequest(url, httpMethod string, body io.Reader) ([]byte, error) {
+func makeRequest(url, httpMethod, token string, body io.Reader) ([]byte, error) {
 	req, err := http.NewRequest(httpMethod, url, body)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
 	}
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", "token 93143d4588a53e7a340c22da3247ae705e6efa4f")
+	if body != nil {
+		req.Header.Add("Content-Type", "application/json")
+	}
+	req.Header.Add("Authorization", token)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -119,7 +121,7 @@ func GetIssue(owner, repo, number string) (*Issue, error) {
 	return &result, nil
 }
 
-func CreateAnIssue(owner, repo string) {
+func CreateAnIssue(token, owner, repo string) {
 	issue, err := getIssueFromFile()
 	if err != nil {
 		log.Fatal(err)
@@ -132,7 +134,7 @@ func CreateAnIssue(owner, repo string) {
 	fmt.Println("url", url)
 	serialized, _ := json.Marshal(issue)
 	fmt.Println("string serialized", string(serialized))
-	resp, err := makeRequest(url, http.MethodPost, bytes.NewReader(serialized))
+	resp, err := makeRequest(url, http.MethodPost, token, bytes.NewReader(serialized))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -143,14 +145,14 @@ func CreateAnIssue(owner, repo string) {
 	fmt.Println(result.Number)
 }
 
-func ReadAnIssue(owner, repo, number string) {
+func ReadAnIssue(token, owner, repo, number string) {
 	replacement := map[string]string{
 		"owner":  owner,
 		"repo":   repo,
 		"number": number,
 	}
 	url := replaceUrlParts(ReadIssueURL, replacement)
-	resp, err := makeRequest(url, http.MethodGet, nil)
+	resp, err := makeRequest(url, http.MethodGet, token, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
