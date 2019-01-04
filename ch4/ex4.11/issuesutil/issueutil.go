@@ -48,18 +48,45 @@ func getJSONFromFile(filename string) (*IssueBodyRequest, error) {
 	return &result, nil
 }
 
-func getIssueFromFile() (*IssueBodyRequest, error) {
-	tmpfile, err := ioutil.TempFile("", "example.*.json")
+func createIssueFromFile() (*IssueBodyRequest, error) {
+	tmpFile, err := ioutil.TempFile("", "example.*.json")
+	defer os.Remove(tmpFile.Name()) // clean up
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
 	}
+	// Close the file
+	if err = tmpFile.Close(); err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	return getIssueFromFile(tmpFile)
+}
 
-	defer os.Remove(tmpfile.Name()) // clean up
+func updateIssueFromFile(issue []byte) (*IssueBodyRequest, error) {
+	tmpFile, err := ioutil.TempFile("", "example.*.json")
+	defer os.Remove(tmpFile.Name()) // clean up
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	_, err = tmpFile.Write(issue)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	// Close the file
+	if err = tmpFile.Close(); err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	return getIssueFromFile(tmpFile)
+}
 
+func getIssueFromFile(tmpfile *os.File) (*IssueBodyRequest, error) {
 	cmd := editorCmd(tmpfile.Name())
 
-	err = cmd.Run()
+	err := cmd.Run()
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +106,7 @@ func makeRequest(url, httpMethod, token string, body io.Reader) ([]byte, error) 
 	if body != nil {
 		req.Header.Add("Content-Type", "application/json")
 	}
-	req.Header.Add("Authorization", token)
+	req.Header.Add("Authorization", fmt.Sprintf("token %s", token))
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -97,34 +124,11 @@ func makeRequest(url, httpMethod, token string, body io.Reader) ([]byte, error) 
 	return b, nil
 }
 
-func GetIssue(owner, repo, number string) (*Issue, error) {
-	replacement := map[string]string{
-		"owner":  owner,
-		"repo":   repo,
-		"number": number,
-	}
-	url := replaceUrlParts(ReadIssueURL, replacement)
-	resp, err := http.Get(url)
-	defer resp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("get issue failed %s", resp.Status)
-	}
-
-	var result Issue
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
-	}
-	return &result, nil
-}
-
-func CreateAnIssue(token, owner, repo string) {
-	issue, err := getIssueFromFile()
+func CreateAnIssue(token, owner, repo string) ([]byte, error) {
+	issue, err := createIssueFromFile()
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 	replacement := map[string]string{
 		"owner": owner,
@@ -137,15 +141,17 @@ func CreateAnIssue(token, owner, repo string) {
 	resp, err := makeRequest(url, http.MethodPost, token, bytes.NewReader(serialized))
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 	var result Issue
 	if err = json.NewDecoder(bytes.NewReader(resp)).Decode(&result); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(result.Number)
+	return resp, nil
 }
 
-func ReadAnIssue(token, owner, repo, number string) {
+func ReadAnIssue(token, owner, repo, number string) ([]byte, error) {
 	replacement := map[string]string{
 		"owner":  owner,
 		"repo":   repo,
@@ -155,10 +161,66 @@ func ReadAnIssue(token, owner, repo, number string) {
 	resp, err := makeRequest(url, http.MethodGet, token, nil)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 	var result Issue
 	if err = json.NewDecoder(bytes.NewReader(resp)).Decode(&result); err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 	fmt.Println(result)
+	return resp, nil
+}
+
+func UpdateAnIssue(token, owner, repo, number string) ([]byte, error) {
+	replacement := map[string]string{
+		"owner":  owner,
+		"repo":   repo,
+		"number": number,
+	}
+	rawIssue, err := ReadAnIssue(token, owner, repo, number)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	issue, err := updateIssueFromFile(rawIssue)
+	if err != nil {
+		log.Fatal(err)
+	}
+	url := replaceUrlParts(UpdateIssueURL, replacement)
+	serialized, _ := json.Marshal(issue)
+	resp, err := makeRequest(url, http.MethodPatch, token, bytes.NewReader(serialized))
+	if err != nil {
+		log.Fatal(err)
+	}
+	var updatedIssue Issue
+	if err = json.NewDecoder(bytes.NewReader(resp)).Decode(&updatedIssue); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(updatedIssue)
+	return resp, nil
+}
+
+func DeleteAnIssue(token, owner, repo, number string) ([]byte, error) {
+	replacement := map[string]string{
+		"owner":  owner,
+		"repo":   repo,
+		"number": number,
+	}
+	url := replaceUrlParts(UpdateIssueURL, replacement)
+	body := IssueBodyRequest{State: "closed", Title: "Closed"}
+	serialized, _ := json.Marshal(body)
+	resp, err := makeRequest(url, http.MethodPatch, token, bytes.NewReader(serialized))
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	fmt.Println("url", url, body)
+	var result Issue
+	if err = json.NewDecoder(bytes.NewReader(resp)).Decode(&result); err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	fmt.Println(string(resp))
+	return resp, nil
 }

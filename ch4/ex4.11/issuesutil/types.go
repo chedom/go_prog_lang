@@ -8,7 +8,6 @@ const SearchIssueURL = "https://api.github.com/search/issues"
 const CreateIssueURL = "https://api.github.com/repos/:owner/:repo/issues"
 const ReadIssueURL = "https://api.github.com/repos/:owner/:repo/issues/:number"
 const UpdateIssueURL = "https://api.github.com/repos/:owner/:repo/issues/:number"
-const DeleteIssueURL = "https://api.github.com/repos/:owner/:repo/issues/:number/lock"
 const DefaultEditor = "vim"
 
 type IssueBodyRequest struct {
