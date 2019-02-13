@@ -1,6 +1,8 @@
 package multisort
 
 import (
+	"sort"
+	"strings"
 	"time"
 )
 
@@ -52,14 +54,23 @@ func (m *MultiSort) Less(i,j int) bool {
 	return m.compares[k](p, q)
 }
 
-func NewMultiSort(tracks []*Track, ordering []string) *MultiSort {
+func newMultiSort(tracks []*Track, ordering []string) *MultiSort {
 	compares := make([]LessFunc, 0)
 	for _, v := range ordering {
-		if f, ok := sortDict[v]; ok {
+		if f, ok := sortDict[strings.ToLower(v)]; ok {
 			compares = append(compares, f)
 		}
+	}
+
+	if len(compares) == 0 {
+		compares = append(compares, sortByTitle)
 	}
 
 	return &MultiSort{t:tracks, compares: compares}
 }
 
+func Sort(tracks []*Track, ordering []string) []*Track {
+	multiSort := newMultiSort(tracks, ordering)
+	sort.Sort(multiSort)
+	return multiSort.t
+}
