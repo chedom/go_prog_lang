@@ -28,7 +28,7 @@ func main() {
 		case xml.StartElement:
 			stack = append(stack, tok) // push
 		case xml.EndElement:
-			stack = stack[:len(stack) - 1] // pop
+			stack = stack[:len(stack)-1] // pop
 		case xml.CharData:
 			if containsAll(stack, queries) {
 				fmt.Printf("%s: %s\n", formatStack(stack), tok)
@@ -48,7 +48,7 @@ func formatStack(stack []xml.StartElement) string {
 }
 
 type Query struct {
-	el string
+	el   string
 	attr *Pair
 }
 
@@ -86,7 +86,7 @@ func containToken(token xml.StartElement, q Query) bool {
 		for _, a := range token.Attr {
 			if a.Name.Local == q.attr.name {
 				if a.Value != q.attr.val {
-					return  false
+					return false
 				}
 			}
 		}
@@ -97,28 +97,28 @@ func containToken(token xml.StartElement, q Query) bool {
 
 type Pair struct {
 	name string
-	val string
+	val  string
 }
 
 func decodeQuery(q string) Query {
 	match := attrReg.FindAllSubmatch([]byte(q), -1)
-	if  match == nil {
-		return Query{ el:q}
+	if match == nil {
+		return Query{el: q}
 	}
 
 	sRes := match[0]
 
 	if len(sRes) != 4 {
 		fmt.Fprintf(os.Stderr, "decodeQuery: %q\n", match)
-		return Query{ el:q}
+		return Query{el: q}
 	}
 
 	el := string(sRes[1])
 
 	attr := &Pair{
 		name: string(sRes[2]),
-		val: string(sRes[3]),
+		val:  string(sRes[3]),
 	}
 
-	return Query{ el:el, attr: attr}
+	return Query{el: el, attr: attr}
 }

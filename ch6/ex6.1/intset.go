@@ -1,16 +1,16 @@
 package intset
 
 type IntSet struct {
-	words [] uint64
+	words []uint64
 }
 
-func (s *IntSet) Len() int  {
+func (s *IntSet) Len() int {
 	var len int
 	for _, word := range s.words {
 		if word == 0 {
 			continue
 		}
-		for i:= 0; i < 64; i++ {
+		for i := 0; i < 64; i++ {
 			if (word & (1 << uint(i))) != 0 {
 				len++
 			}

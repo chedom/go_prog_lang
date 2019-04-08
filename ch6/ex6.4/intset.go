@@ -1,7 +1,7 @@
 package intset
 
 type IntSet struct {
-	words [] uint64
+	words []uint64
 }
 
 func (s *IntSet) Elems() []int {
@@ -10,8 +10,8 @@ func (s *IntSet) Elems() []int {
 		if word == 0 {
 			continue
 		}
-		for j:=0; j < 64; j++ {
-			if word & (1<< uint(j)) != 0 {
+		for j := 0; j < 64; j++ {
+			if word&(1<<uint(j)) != 0 {
 				res = append(res, i*64+j)
 			}
 		}

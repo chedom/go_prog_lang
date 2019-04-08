@@ -24,7 +24,6 @@ var tracks = []*multisort.Track{
 	{"Ready 2 Go", "Martin Solveig", "Smash", 2011, length("4m24s")},
 }
 
-
 var trackList = template.Must(template.New("trackList").Parse(`
 <h1>Track list, count {{len .}}</h1>
 <table border='1'>

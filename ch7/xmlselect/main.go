@@ -23,7 +23,7 @@ func main() {
 		case xml.StartElement:
 			stack = append(stack, tok.Name.Local) // push
 		case xml.EndElement:
-			stack = stack[:len(stack) - 1] // pop
+			stack = stack[:len(stack)-1] // pop
 		case xml.CharData:
 			if containsAll(stack, os.Args[1:]) {
 				fmt.Printf("%s: %s\n", strings.Join(stack, " "), tok)

@@ -3,9 +3,9 @@ package main
 import "fmt"
 
 func add(a, b int) (result int) {
-	type noReturn struct {}
+	type noReturn struct{}
 	defer func() {
-		switch p:=recover(); p {
+		switch p := recover(); p {
 		case nil:
 			// no panic
 		case noReturn{}:

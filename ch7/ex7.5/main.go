@@ -4,7 +4,7 @@ import "io"
 
 type limitReader struct {
 	reminder int64
-	r io.Reader
+	r        io.Reader
 }
 
 func min(a int64, b int64) int64 {
@@ -28,5 +28,5 @@ func (lr *limitReader) Read(p []byte) (n int, err error) {
 }
 
 func LimitReader(r io.Reader, n int64) io.Reader {
-	return &limitReader{ r: r, reminder: n }
+	return &limitReader{r: r, reminder: n}
 }

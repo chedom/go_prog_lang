@@ -23,6 +23,6 @@ func min(min int, vals ...int) int {
 }
 
 func main() {
-	fmt.Println(max(3,35,78,23,2,45,77,8))
-	fmt.Println(min(3,35,78,23,2,45,77,8))
+	fmt.Println(max(3, 35, 78, 23, 2, 45, 77, 8))
+	fmt.Println(min(3, 35, 78, 23, 2, 45, 77, 8))
 }

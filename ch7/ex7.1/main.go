@@ -14,7 +14,7 @@ func (w *WordCounter) Write(p []byte) (int, error) {
 	for scanner.Scan() {
 		*w++
 	}
-	if err:= scanner.Err(); err != nil {
+	if err := scanner.Err(); err != nil {
 		return 0, err
 	}
 	return len(p), nil
@@ -28,7 +28,7 @@ func (l *LineCounter) Write(p []byte) (int, error) {
 	for scanner.Scan() {
 		*l++
 	}
-	if err:= scanner.Err(); err != nil {
+	if err := scanner.Err(); err != nil {
 		return 0, nil
 	}
 	return len(p), nil

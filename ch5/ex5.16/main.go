@@ -13,6 +13,6 @@ func Join(sep string, vals ...string) string {
 	return result
 }
 
-func main () {
+func main() {
 	fmt.Println(Join("-", "a", "b", "c", "d", "e"))
 }

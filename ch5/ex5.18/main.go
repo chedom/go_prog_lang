@@ -1,11 +1,11 @@
 package main
 
 import (
-"fmt"
-"io"
-"net/http"
-"os"
-"path"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"path"
 )
 
 func fetch(url string) (filename string, n int64, err error) {

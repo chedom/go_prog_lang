@@ -5,20 +5,20 @@ import (
 	"fmt"
 )
 
-const SIZE  = 32 << (^uint(0) >> 63)
+const SIZE = 32 << (^uint(0) >> 63)
 
 type IntSet struct {
-	words [] uint64
+	words []uint64
 }
 
 func (s *IntSet) Has(x int) bool {
-	word, bit := x /SIZE, uint(SIZE)
+	word, bit := x/SIZE, uint(SIZE)
 	return word < len(s.words) && s.words[word]&(1<<bit) != 0
 }
 
 func (s *IntSet) Add(x int) {
 	word, bit := x/SIZE, uint(SIZE)
-	for  word >= len(s.words) {
+	for word >= len(s.words) {
 		s.words = append(s.words, 0)
 	}
 	s.words[word] |= 1 << bit
@@ -41,12 +41,12 @@ func (s *IntSet) String() string {
 		if word == 0 {
 			continue
 		}
-		for j:=0; j < 64; j++ {
+		for j := 0; j < 64; j++ {
 			if word&(1<<uint(j)) != 0 {
 				if buf.Len() > len("{") {
 					buf.WriteByte(' ')
 				}
-				fmt.Fprintf(&buf, "%d", 64*i +j)
+				fmt.Fprintf(&buf, "%d", 64*i+j)
 			}
 		}
 	}

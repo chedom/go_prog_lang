@@ -42,7 +42,7 @@ func (db database) create(w http.ResponseWriter, r *http.Request) {
 	rawPrice := queryValues.Get("price")
 	price, err := strconv.ParseFloat(rawPrice, 32)
 
-	if err!= nil {
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "price is not correct: %v", err)
 		return

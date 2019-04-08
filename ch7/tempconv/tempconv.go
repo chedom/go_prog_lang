@@ -17,7 +17,7 @@ const (
 func (c Celsius) String() string    { return fmt.Sprintf("%gC", c) }
 func (f Fahrenheit) String() string { return fmt.Sprintf("%gF", f) }
 
-type celsiusFlag struct { Celsius }
+type celsiusFlag struct{ Celsius }
 
 func (f *celsiusFlag) Set(s string) error {
 	var unit string

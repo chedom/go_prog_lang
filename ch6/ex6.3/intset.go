@@ -1,7 +1,7 @@
 package intset
 
 type IntSet struct {
-	words [] uint64
+	words []uint64
 }
 
 func (s *IntSet) UnionWith(t *IntSet) {

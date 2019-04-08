@@ -11,7 +11,7 @@ import (
 func title(url string) error {
 	resp, err := http.Get(url)
 	if err != nil {
-		return  err
+		return err
 	}
 	resp.Body.Close()
 	// Check Content-Type is HTML

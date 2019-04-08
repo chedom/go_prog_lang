@@ -32,6 +32,5 @@ func (c call) String() string {
 	for _, a := range c.args {
 		args = append(args, a.String())
 	}
-	return c.fn + "("+ strings.Join(args, ", ") + ")"
+	return c.fn + "(" + strings.Join(args, ", ") + ")"
 }
-

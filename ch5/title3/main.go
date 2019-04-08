@@ -6,10 +6,10 @@ import (
 )
 
 func soleTitle(doc *html.Node) (title string, err error) {
-	type bailout struct {}
+	type bailout struct{}
 
 	defer func() {
-		switch p:= recover(); p {
+		switch p := recover(); p {
 		case nil:
 			// no panic
 		case bailout{}:
@@ -48,5 +48,3 @@ func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
 		post(n)
 	}
 }
-
-

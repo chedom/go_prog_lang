@@ -8,8 +8,8 @@ func isEqual(s sort.Interface, i, j int) bool {
 
 func isPalindrome(s sort.Interface) bool {
 	lastIdx := s.Len() - 1
-	for i:=0; i < s.Len() / 2; i++ {
-		if !isEqual(s, i, lastIdx - i) {
+	for i := 0; i < s.Len()/2; i++ {
+		if !isEqual(s, i, lastIdx-i) {
 			return false
 		}
 

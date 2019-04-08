@@ -8,7 +8,7 @@ import (
 
 func ElementsByTagName(doc *html.Node, name ...string) []*html.Node {
 	var elements []*html.Node
-	f := func (n *html.Node) {
+	f := func(n *html.Node) {
 		if n.Type == html.ElementNode && contains(name, n.Data) {
 			elements = append(elements, n)
 		}
@@ -29,7 +29,7 @@ func contains(s []string, e string) bool {
 func traverse(doc *html.Node, f func(doc *html.Node)) {
 	f(doc)
 
-	for c:= doc.FirstChild; c != nil; c = c.NextSibling {
+	for c := doc.FirstChild; c != nil; c = c.NextSibling {
 		traverse(c, f)
 	}
 }
