@@ -19,6 +19,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	defer conn.Close()
+
 	go copy(os.Stdout, conn)
 
 	sendCmd(conn)

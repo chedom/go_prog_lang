@@ -17,6 +17,8 @@ func connect(city, addr string, wg sync.WaitGroup) error {
 		log.Printf("error connect: %v\n", err)
 		return err
 	}
+
+	defer conn.Close()
 	return copy(&withCity{city:city}, conn)
 
 }
