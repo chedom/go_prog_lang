@@ -3,11 +3,12 @@ package links
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"golang.org/x/net/html"
 )
 
-// Extraact makes an HTTP GET request to the specified URL, parses
+// Extract makes an HTTP GET request to the specified URL, parses
 // the response as HTML, and returns the links in the HTML document.
 func Extract(url string) ([]string, error) {
 	resp, err := http.Get(url)
@@ -18,6 +19,12 @@ func Extract(url string) ([]string, error) {
 		resp.Body.Close()
 		return nil, fmt.Errorf("gettitng %s: %s", url, resp.Status)
 	}
+
+	contentType := resp.Header["Content-Type"]
+	if !strings.Contains(strings.Join(contentType, ","), "text/html") {
+		return nil, fmt.Errorf("file is not html")
+	}
+
 	doc, err := html.Parse(resp.Body)
 	resp.Body.Close()
 	if err != nil {
