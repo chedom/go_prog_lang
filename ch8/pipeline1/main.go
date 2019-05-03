@@ -16,7 +16,7 @@ func main() {
 	// Squarer
 	go func() {
 		for {
-			x, ok := <- naturals
+			x, ok := <-naturals
 			if !ok {
 				break
 			}
@@ -27,7 +27,7 @@ func main() {
 
 	// Printer (in main goroutine)
 	for {
-		if val, ok := <- squares; ok {
+		if val, ok := <-squares; ok {
 			fmt.Println(val)
 		}
 		break

@@ -20,9 +20,9 @@ func main() {
 		fmt.Println(countdown)
 
 		select {
-		case <- tick:
+		case <-tick:
 			continue
-		case <- abort:
+		case <-abort:
 			fmt.Println("Launch aborted!")
 			return
 		}

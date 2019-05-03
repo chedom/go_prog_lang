@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/chedom/go_prog_lang/ch5/links"
-
 )
 
 func crawl(url string) []string {
@@ -19,7 +18,7 @@ func crawl(url string) []string {
 }
 
 func main() {
-	worklist := make(chan []string) // lists of URLs, may have duplicates
+	worklist := make(chan []string)  // lists of URLs, may have duplicates
 	unseenLinks := make(chan string) // de-duplicated URLs
 
 	// Add command-line arguments to worklist.
@@ -30,7 +29,7 @@ func main() {
 		go func() {
 			for link := range unseenLinks {
 				foundLinks := crawl(link)
-				go func() { worklist <- foundLinks}()
+				go func() { worklist <- foundLinks }()
 			}
 		}()
 	}

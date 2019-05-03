@@ -29,7 +29,7 @@ func handleConn(c net.Conn) {
 	for {
 		_, err := io.WriteString(c, time.Now().Format("15:04:05\n"))
 		if err != nil {
-			return  //e.g., client disconnected
+			return //e.g., client disconnected
 		}
 		time.Sleep(1 * time.Second)
 	}

@@ -43,7 +43,7 @@ func sendCmd(conn net.Conn) {
 		if len(words) == 0 {
 			continue
 		}
-		fmt.Fprintf(conn, line + "\n")
+		fmt.Fprintf(conn, line+"\n")
 		if words[0] == "close" {
 			break
 		}

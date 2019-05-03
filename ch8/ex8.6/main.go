@@ -17,7 +17,7 @@ func crawl(url string) []string {
 
 	tokens <- struct{}{} // acquire a token
 	list, err := links.Extract(url)
-	<- tokens //release the token
+	<-tokens //release the token
 
 	if err != nil {
 		log.Print(err)
@@ -29,7 +29,7 @@ func main() {
 	flag.Parse()
 
 	type item struct {
-		list []string
+		list  []string
 		depth int
 	}
 	worklist := make(chan item)
@@ -38,14 +38,14 @@ func main() {
 	// Start with the command-line arguments
 	n++
 	go func() {
-		i := item{ list: flag.Args(), depth: 3 }
+		i := item{list: flag.Args(), depth: 3}
 		worklist <- i
 	}()
 
 	// Crawl the web concurrently
 	seen := make(map[string]bool)
 	for ; n > 0; n-- {
-		i := <- worklist
+		i := <-worklist
 
 		if i.depth == 0 {
 			continue

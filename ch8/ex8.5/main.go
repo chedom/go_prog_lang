@@ -17,8 +17,8 @@ func main() {
 
 func createImg(out io.Writer) {
 	type item struct {
-		px int
-		py int
+		px    int
+		py    int
 		color color.Color
 	}
 

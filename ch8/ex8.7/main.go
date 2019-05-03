@@ -44,7 +44,7 @@ func main() {
 	seen := make(map[string]bool)
 
 	for ; n > 0; n-- {
-		list := <- worklist
+		list := <-worklist
 		for _, link := range list {
 			if !seen[link] {
 				seen[link] = true

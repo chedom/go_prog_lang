@@ -19,10 +19,9 @@ func connect(city, addr string, wg sync.WaitGroup) error {
 	}
 
 	defer conn.Close()
-	return copy(&withCity{city:city}, conn)
+	return copy(&withCity{city: city}, conn)
 
 }
-
 
 func copy(dst io.Writer, src io.Reader) error {
 

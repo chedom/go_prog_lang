@@ -10,7 +10,7 @@ import (
 
 // walkDir recursively walk the file tree rooted at dir
 // and sends the size of each found file on fileSize
-func walkDir(dir string, fileSizes chan <- int64) {
+func walkDir(dir string, fileSizes chan<- int64) {
 	for _, entry := range dirents(dir) {
 		if entry.IsDir() {
 			subdir := filepath.Join(dir, entry.Name())

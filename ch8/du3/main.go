@@ -14,7 +14,7 @@ var verbose = flag.Bool("v", false, "show verbose progress message")
 
 // walkDir recursively walk the file tree rooted at dir
 // and sends the size of each found file on fileSize
-func walkDir(dir string, n *sync.WaitGroup, fileSizes chan <- int64) {
+func walkDir(dir string, n *sync.WaitGroup, fileSizes chan<- int64) {
 	defer n.Done()
 
 	for _, entry := range dirents(dir) {
@@ -67,27 +67,26 @@ func main() {
 	}()
 
 	// Print the result periodically.
-	var tick <- chan time.Time
+	var tick <-chan time.Time
 	if *verbose {
-		tick = time.Tick(500 *time.Millisecond)
+		tick = time.Tick(500 * time.Millisecond)
 	}
 
 	var nfiles, nbytes int64
 
-	loop:
-		for {
-			select {
-			case size, ok := <- fileSizes:
-				if !ok {
-					break loop
-				}
-				nfiles++
-				nbytes += size
-			case <- tick:
-				printDiskUsage(nfiles, nbytes)
+loop:
+	for {
+		select {
+		case size, ok := <-fileSizes:
+			if !ok {
+				break loop
 			}
+			nfiles++
+			nbytes += size
+		case <-tick:
+			printDiskUsage(nfiles, nbytes)
 		}
-
+	}
 
 	printDiskUsage(nfiles, nbytes)
 }

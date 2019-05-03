@@ -52,7 +52,6 @@ func save(rawurl string) error {
 		return err
 	}
 
-
 	doc, err := html.Parse(resp.Body)
 	if err != nil {
 		return nil
@@ -69,5 +68,3 @@ func save(rawurl string) error {
 	}
 	return err
 }
-
-

@@ -49,7 +49,7 @@ func handleConn(c net.Conn) {
 		go func(s string) {
 			defer wg.Done()
 
-			echo(c, s, 1 * time.Second)
+			echo(c, s, 1*time.Second)
 		}(input.Text())
 	}
 

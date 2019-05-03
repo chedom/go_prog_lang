@@ -21,7 +21,7 @@ func makeThumbnails3(filenames []string) {
 	}
 
 	for range filenames {
-		<- ch
+		<-ch
 	}
 }
 
@@ -36,7 +36,7 @@ func makeThumbnails4(filenames []string) error {
 	}
 
 	for range filenames {
-		if err := <- errors; err != nil {
+		if err := <-errors; err != nil {
 			return err // NOTE: incorrect: goroutine leak!
 		}
 	}
@@ -47,7 +47,7 @@ func makeThumbnails4(filenames []string) error {
 func makeThumbnails5(filenames []string) (thumbnails []string, err error) {
 	type item struct {
 		thumbfile string
-		err error
+		err       error
 	}
 
 	ch := make(chan item, len(filenames))
@@ -60,7 +60,7 @@ func makeThumbnails5(filenames []string) (thumbnails []string, err error) {
 	}
 
 	for range filenames {
-		it := <- ch
+		it := <-ch
 		if it.err != nil {
 			return nil, it.err
 		}
@@ -70,10 +70,10 @@ func makeThumbnails5(filenames []string) (thumbnails []string, err error) {
 	return thumbnails, nil
 }
 
-func makeThumbnails6(filenames <- chan string) int64 {
+func makeThumbnails6(filenames <-chan string) int64 {
 	sizes := make(chan int64)
 	var wg sync.WaitGroup
-	for f:= range filenames {
+	for f := range filenames {
 		wg.Add(1)
 		//worker
 		go func(f string) {

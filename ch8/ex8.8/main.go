@@ -50,9 +50,9 @@ func handleConn(c net.Conn) {
 
 	for {
 		select {
-		case m := <- shouts:
-			go echo(c, m, 1 * time.Second)
-		case <- time.After(10 * time.Second):
+		case m := <-shouts:
+			go echo(c, m, 1*time.Second)
+		case <-time.After(10 * time.Second):
 			c.Close()
 			return
 		}

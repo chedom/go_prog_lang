@@ -18,7 +18,7 @@ var BufferSize = 1000
 
 type cmd struct {
 	currDir string
-	conn net.Conn
+	conn    net.Conn
 }
 
 func NewCmd(conn net.Conn) *cmd {
@@ -26,7 +26,7 @@ func NewCmd(conn net.Conn) *cmd {
 	if err != nil {
 		log.Panic(err)
 	}
-	return &cmd{currDir:dir, conn:conn}
+	return &cmd{currDir: dir, conn: conn}
 }
 
 func (cmd *cmd) Listen() {
@@ -67,7 +67,7 @@ func (cmd *cmd) ls() error {
 	}
 
 	for _, f := range files {
-		_, err := io.WriteString(cmd.conn, f.Name() + "\n")
+		_, err := io.WriteString(cmd.conn, f.Name()+"\n")
 		if err != nil {
 			return err
 		}
@@ -82,7 +82,7 @@ func (cmd *cmd) cd(p string) error {
 
 	if err == nil {
 		cmd.currDir = newDir
-		fmt.Fprint(cmd.conn, newDir + "\n")
+		fmt.Fprint(cmd.conn, newDir+"\n")
 		return nil
 	}
 

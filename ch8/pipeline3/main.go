@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func counter(out chan <- int) {
+func counter(out chan<- int) {
 	for x := 0; x < 100; x++ {
 		out <- x
 	}
@@ -10,7 +10,7 @@ func counter(out chan <- int) {
 	close(out)
 }
 
-func squarer(out chan <- int, in <- chan int) {
+func squarer(out chan<- int, in <-chan int) {
 	for v := range in {
 		out <- v * v
 	}
@@ -18,7 +18,7 @@ func squarer(out chan <- int, in <- chan int) {
 	close(out)
 }
 
-func printer(in <- chan int) {
+func printer(in <-chan int) {
 	for v := range in {
 		fmt.Println(v)
 	}

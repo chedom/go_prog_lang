@@ -15,7 +15,7 @@ func crawl(url string) []string {
 
 	tokens <- struct{}{} // acquire a token
 	list, err := links.Extract(url)
-	<- tokens //release the token
+	<-tokens //release the token
 
 	if err != nil {
 		log.Print(err)
@@ -34,7 +34,7 @@ func main() {
 	// Crawl the web concurrently
 	seen := make(map[string]bool)
 	for ; n > 0; n-- {
-		list := <- worklist
+		list := <-worklist
 		for _, link := range list {
 			if !seen[link] {
 				seen[link] = true
@@ -46,7 +46,5 @@ func main() {
 			}
 		}
 	}
-
-
 
 }
