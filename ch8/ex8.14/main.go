@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"context"
 	"fmt"
 	"log"
 	"net"
@@ -57,7 +56,6 @@ func broadcaster() {
 }
 
 func handleConn(conn net.Conn) {
-	ctx, cancelFunc := context.WithCancel(context.Background())
 	out := make(chan string)
 	in := make(chan string)
 
@@ -66,24 +64,38 @@ func handleConn(conn net.Conn) {
 
 	out <- "Write you name"
 
-	go closer(ctx, conn, in)
 	var who string
-	who = <- in
+	select {
+	case name := <- in:
+		who = name
+	case <- time.After(5*time.Minute):
+		conn.Close()
+		return
+	}
 
 	cli := client{out: out, name: who}
 	out <- "You are " + who
 	messages <- who + " has arrived"
 	entering <- cli
 
-
 	for m := range in {
 		messages <- who + ": " + m
+	}
+
+Loop:
+	for {
+		select {
+		case msg := <- in:
+			messages <- who + ": " + msg
+			continue
+		case <- time.After(5 *time.Minute):
+			break Loop
+		}
 	}
 
 	leaving <- cli
 	messages <- who + " has left"
 	conn.Close()
-	cancelFunc()
 }
 
 func clientWriter(conn net.Conn, ch <- chan string) {
@@ -97,20 +109,4 @@ func clientReader(conn net.Conn, ch chan <- string) {
 	for input.Scan() {
 		ch <- input.Text()
 	}
-}
-
-func closer(ctx context.Context, conn net.Conn, sendEvents <- chan string) {
-	go func() {
-		for {
-			select {
-			case <- ctx.Done():
-				return
-			case <- time.After(5 * time.Minute):
-				conn.Close()
-				return
-			case <-sendEvents:
-				continue
-			}
-		}
-	}()
 }
