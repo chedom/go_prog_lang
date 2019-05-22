@@ -21,9 +21,9 @@ func main() {
 		q <- 1
 		for {
 			select {
-			case <- done:
+			case <-done:
 				return
-			case n := <- q:
+			case n := <-q:
 				i++
 				q <- n
 			}
@@ -32,15 +32,15 @@ func main() {
 	go func() {
 		for {
 			select {
-			case <- done:
+			case <-done:
 				return
-			case n := <- q:
+			case n := <-q:
 				q <- n
 			}
 		}
 	}()
 
-	<- done
+	<-done
 	fmt.Println(float64(i)/float64(time.Since(start))*1e9, "round trips per second")
 
 }
