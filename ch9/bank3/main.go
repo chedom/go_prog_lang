@@ -3,7 +3,7 @@ package bank3
 import "sync"
 
 var (
-	mu sync.Mutex
+	mu      sync.Mutex
 	balance int
 )
 

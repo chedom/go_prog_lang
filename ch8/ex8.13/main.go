@@ -11,12 +11,12 @@ import (
 
 var (
 	entering = make(chan client)
-	leaving = make(chan client)
+	leaving  = make(chan client)
 	messages = make(chan string)
 )
 
 type client struct {
-	out chan <- string
+	out  chan<- string
 	name string
 }
 
@@ -49,7 +49,7 @@ func broadcaster() {
 		case cli := <-entering:
 			clients[cli] = struct{}{}
 			go func() { messages <- cli.name }()
-		case cli := <- leaving:
+		case cli := <-leaving:
 			delete(clients, cli)
 			close(cli.out)
 		}
@@ -83,19 +83,19 @@ func handleConn(conn net.Conn) {
 	cancelFunc()
 }
 
-func clientWriter(conn net.Conn, ch <- chan string) {
+func clientWriter(conn net.Conn, ch <-chan string) {
 	for msg := range ch {
 		fmt.Fprintln(conn, msg)
 	}
 }
 
-func closer(ctx context.Context, conn net.Conn, sendEvents <- chan struct{}) {
+func closer(ctx context.Context, conn net.Conn, sendEvents <-chan struct{}) {
 	go func() {
 		for {
 			select {
-			case <- ctx.Done():
+			case <-ctx.Done():
 				return
-			case <- time.After(5 * time.Minute):
+			case <-time.After(5 * time.Minute):
 				conn.Close()
 				return
 			case <-sendEvents:

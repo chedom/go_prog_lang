@@ -2,9 +2,12 @@
 // memoization of a function of type Func.
 package memo1
 
+import "sync"
+
 // A Memo caches the result of calling a Func
 type Memo struct {
 	f     Func
+	mu    sync.Mutex
 	cache map[string]result
 }
 
@@ -21,11 +24,12 @@ func New(f Func) *Memo {
 
 // NOTE: not concurrency-safe
 func (memo *Memo) Get(key string) (interface{}, error) {
+	memo.mu.Lock()
 	res, ok := memo.cache[key]
 	if !ok {
 		res.value, res.err = memo.f(key)
 		memo.cache[key] = res
 	}
-
+	memo.mu.Unlock()
 	return res.value, res.err
 }

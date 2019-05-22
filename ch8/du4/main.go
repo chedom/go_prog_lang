@@ -16,7 +16,7 @@ var done = make(chan struct{})
 
 func cancelled() bool {
 	select {
-	case <- done:
+	case <-done:
 		return true
 	default:
 		return false
@@ -50,10 +50,10 @@ var sema = make(chan struct{}, 20)
 func dirents(dir string) []os.FileInfo {
 	select {
 	case sema <- struct{}{}: // acquire token
-	case <- done:
+	case <-done:
 		return nil
 	}
-	
+
 	defer func() { <-sema }()
 
 	entries, err := ioutil.ReadDir(dir)
@@ -110,7 +110,7 @@ loop:
 			nbytes += size
 		case <-tick:
 			printDiskUsage(nfiles, nbytes)
-		case <- done:
+		case <-done:
 			for range fileSizes {
 				// Do nothing.
 			}

@@ -6,23 +6,23 @@ var withdrawRes = make(chan bool)
 var withdraw = make(chan withdrawMes) // send amount to withdraw
 
 type withdrawMes struct {
-	ch chan bool
+	ch     chan bool
 	amount int
 }
 
 func Deposit(amount int) { deposits <- amount }
-func Balance() int { return <- balances }
+func Balance() int       { return <-balances }
 func Withdraw(amount int) bool {
 	ch := make(chan bool)
 	withdraw <- withdrawMes{ch: ch, amount: amount}
-	return <- ch
+	return <-ch
 }
 
 func teller() {
 	var balance int // balance is confined to teller goroutine
 	for {
 		select {
-		case amount := <- deposits:
+		case amount := <-deposits:
 			balance += amount
 		case m := <-withdraw:
 			if m.amount > balance {

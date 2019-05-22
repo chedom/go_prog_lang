@@ -7,11 +7,11 @@ import (
 	"net"
 )
 
-type client chan <- string
+type client chan<- string
 
 var (
 	entering = make(chan client)
-	leaving = make(chan client)
+	leaving  = make(chan client)
 	messages = make(chan string)
 )
 
@@ -44,7 +44,7 @@ func broadcaster() {
 			}
 		case cli := <-entering:
 			clients[cli] = true
-		case cli := <- leaving:
+		case cli := <-leaving:
 			delete(clients, cli)
 			close(cli)
 		}
@@ -70,7 +70,7 @@ func handleConn(conn net.Conn) {
 	conn.Close()
 }
 
-func clientWriter(conn net.Conn, ch <- chan string) {
+func clientWriter(conn net.Conn, ch <-chan string) {
 	for msg := range ch {
 		fmt.Fprintln(conn, msg)
 	}

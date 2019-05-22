@@ -28,9 +28,9 @@ func mirroredQuery(urls []string) {
 			}
 
 			select {
-			case  result <- res:
+			case result <- res:
 				break
-			case <- ctx.Done():
+			case <-ctx.Done():
 				return
 			}
 		}(url)
@@ -40,7 +40,6 @@ func mirroredQuery(urls []string) {
 	defer res.Body.Close()
 
 	cancel()
-
 
 	fmt.Println(res.Request.URL)
 }

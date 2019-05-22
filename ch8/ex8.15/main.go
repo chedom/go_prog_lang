@@ -11,19 +11,19 @@ import (
 
 var (
 	entering = make(chan client)
-	leaving = make(chan client)
+	leaving  = make(chan client)
 	messages = make(chan string)
 )
 
 type client struct {
-	out chan <- string
+	out  chan<- string
 	name string
 }
 
 var (
-	writeDelay  = 5 * time.Second
-	idleDelay = 5 * time.Minute
-	outBuff = 5
+	writeDelay = 5 * time.Second
+	idleDelay  = 5 * time.Minute
+	outBuff    = 5
 )
 
 func main() {
@@ -56,7 +56,7 @@ func broadcaster(ctx context.Context) {
 		case cli := <-entering:
 			clients[cli] = struct{}{}
 			go func() { messages <- cli.name }()
-		case cli := <- leaving:
+		case cli := <-leaving:
 			delete(clients, cli)
 			close(cli.out)
 		}
@@ -74,9 +74,9 @@ func handleConn(conn net.Conn) {
 
 	var who string
 	select {
-	case name := <- in:
+	case name := <-in:
 		who = name
-	case <- time.After(idleDelay):
+	case <-time.After(idleDelay):
 		conn.Close()
 		return
 	}
@@ -93,10 +93,10 @@ func handleConn(conn net.Conn) {
 Loop:
 	for {
 		select {
-		case msg := <- in:
+		case msg := <-in:
 			messages <- who + ": " + msg
 			continue
-		case <- time.After(idleDelay):
+		case <-time.After(idleDelay):
 			break Loop
 		}
 	}
@@ -106,13 +106,13 @@ Loop:
 	conn.Close()
 }
 
-func clientWriter(conn net.Conn, ch <- chan string) {
+func clientWriter(conn net.Conn, ch <-chan string) {
 	for msg := range ch {
 		fmt.Fprintln(conn, msg)
 	}
 }
 
-func clientReader(conn net.Conn, ch chan <- string) {
+func clientReader(conn net.Conn, ch chan<- string) {
 	input := bufio.NewScanner(conn)
 	for input.Scan() {
 		ch <- input.Text()
@@ -121,9 +121,9 @@ func clientReader(conn net.Conn, ch chan <- string) {
 
 func writeToClient(ctx context.Context, c client, msg string, delay time.Duration) {
 	select {
-	case <- ctx.Done():
+	case <-ctx.Done():
 		return
-	case <- time.After(delay):
+	case <-time.After(delay):
 		return
 	case c.out <- msg:
 		return

@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func crawl(cancel chan struct{},url string) []string {
+func crawl(cancel chan struct{}, url string) []string {
 	fmt.Println(url)
 	list, err := Extract(cancel, url)
 	if err != nil {
@@ -34,7 +34,7 @@ func main() {
 		go func() {
 			for {
 				select {
-				case link, ok := <- unseenLinks:
+				case link, ok := <-unseenLinks:
 					if !ok {
 						close(worklist)
 						return
@@ -44,11 +44,11 @@ func main() {
 						select {
 						case worklist <- foundLinks:
 							break
-						case <- cancel:
+						case <-cancel:
 							return
 						}
 					}()
-				case <- cancel:
+				case <-cancel:
 					for range unseenLinks {
 						// do nothing
 					}
@@ -68,7 +68,7 @@ func main() {
 				select {
 				case unseenLinks <- link:
 					break
-				case <- cancel:
+				case <-cancel:
 					for range worklist {
 
 					}
