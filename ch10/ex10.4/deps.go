@@ -11,7 +11,7 @@ import (
 )
 
 func getInitialPks(pks []string) []string {
-	args := []string{ "list", "-f", "'{{.ImportPath}}'"}
+	args := []string{"list", "-f", "'{{.ImportPath}}'"}
 
 	for _, v := range pks {
 		args = append(args, v)
@@ -31,7 +31,7 @@ func getAncestors(depends []string) []string {
 		dependsMap[v] = struct{}{}
 	}
 
-	args := []string{ "list", `-f='{{.ImportPath}} {{join .Deps " "}}'`, "..."}
+	args := []string{"list", `-f='{{.ImportPath}} {{join .Deps " "}}'`, "..."}
 	out, err := exec.Command("go", args...).Output()
 	if err != nil {
 		log.Fatal(err)
@@ -57,7 +57,6 @@ func getAncestors(depends []string) []string {
 
 	return result
 }
-
 
 func main() {
 	pks := os.Args[1:]
