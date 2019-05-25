@@ -9,6 +9,10 @@ type BitIntSet struct {
 	words []uint64
 }
 
+func NewBitIntSet() *BitIntSet {
+	return &BitIntSet{}
+}
+
 func (s *BitIntSet) Has(x int) bool {
 	word, bit := x/64, uint(x%64)
 	return word < len(s.words) && s.words[word]&(1<<bit) != 0
@@ -79,8 +83,8 @@ func (s *BitIntSet) Remove(x int) {
 	s.words[word] &^= 1 << bit
 }
 
-func (s *BitIntSet) Clear() {
-	for i:= range  s.words {
+func (s *BitIntSet) Clear()  {
+	for i := range s.words {
 		s.words[i] = 0
 	}
 }

@@ -9,17 +9,17 @@ import (
 type testItem struct {
 	input string
 
-	counts map[rune]int
-	utflen map[int]int
+	counts  map[rune]int
+	utflen  map[int]int
 	invalid int
 }
 
 func TestCharcount(t *testing.T) {
 	tests := []testItem{
 		{
-			input: "Hi, 世.",
-			counts: map[rune]int{'H': 1, 'i': 1, ',': 1, ' ': 1, '世': 1, '.': 1},
-			utflen:   map[int]int{1: 5, 3: 1},
+			input:   "Hi, 世.",
+			counts:  map[rune]int{'H': 1, 'i': 1, ',': 1, ' ': 1, '世': 1, '.': 1},
+			utflen:  map[int]int{1: 5, 3: 1},
 			invalid: 0,
 		},
 	}

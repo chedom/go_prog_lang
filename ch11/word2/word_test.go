@@ -34,11 +34,10 @@ func TestIsPalindrome(t *testing.T) {
 	}
 }
 
-
 func randomPalindrome(rng *rand.Rand) string {
 	n := rng.Intn(25)
 	runes := make([]rune, n)
-	for i := 0; i < (n +1)/2; i++ {
+	for i := 0; i < (n+1)/2; i++ {
 		r := rune(rng.Intn(0x1000))
 		runes[i] = r
 		runes[n-1-i] = r
@@ -49,7 +48,7 @@ func randomPalindrome(rng *rand.Rand) string {
 func randomNonPalindrome(rng *rand.Rand) string {
 	max := 25
 	min := 2
-	n := rng.Intn(max - min) + min
+	n := rng.Intn(max-min) + min
 	runes := make([]rune, n)
 	for i := 0; i < n; i++ {
 		for {
@@ -86,5 +85,11 @@ func TestRandomNonPalindrome(t *testing.T) {
 		if IsPalindrome(p) {
 			t.Errorf("IsPalindrome(%q)=true", p)
 		}
+	}
+}
+
+func BenchmarkIsPalindrome(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		IsPalindrome("A man, a plan, a canal: Panama")
 	}
 }

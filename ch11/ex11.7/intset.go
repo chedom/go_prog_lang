@@ -7,4 +7,5 @@ type IntSet interface {
 	String() string
 	Len() int
 	Remove(x int)
+	Clear()
 }

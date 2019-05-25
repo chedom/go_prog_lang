@@ -34,7 +34,6 @@ func TestIsPalindrome(t *testing.T) {
 	}
 }
 
-
 func randomPalindrome(rng *rand.Rand) string {
 	max := 25
 	n := rng.Intn(max)
@@ -57,7 +56,7 @@ func randomPalindrome(rng *rand.Rand) string {
 func randomNonPalindrome(rng *rand.Rand) string {
 	max := 25
 	min := 2
-	n := rng.Intn(max - min) + min
+	n := rng.Intn(max-min) + min
 	runes := make([]rune, n)
 	for i := 0; i < n; i++ {
 		for {
