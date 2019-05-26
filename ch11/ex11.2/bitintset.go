@@ -80,7 +80,7 @@ func (s *BitIntSet) Remove(x int) {
 }
 
 func (s *BitIntSet) Clear() {
-	for i:= range  s.words {
+	for i := range s.words {
 		s.words[i] = 0
 	}
 }

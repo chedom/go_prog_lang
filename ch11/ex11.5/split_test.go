@@ -9,7 +9,7 @@ import (
 func TestSplit(t *testing.T) {
 	tests := []struct {
 		input, sep string
-		want []string
+		want       []string
 	}{
 		{"a:b:c", ":", []string{"a", "b", "c"}},
 	}

@@ -83,7 +83,7 @@ func (s *BitInt32Set) Remove(x int) {
 	s.words[word] &^= 1 << bit
 }
 
-func (s *BitInt32Set) Clear()  {
+func (s *BitInt32Set) Clear() {
 	for i := range s.words {
 		s.words[i] = 0
 	}

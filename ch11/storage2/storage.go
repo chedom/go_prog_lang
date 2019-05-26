@@ -17,15 +17,13 @@ const hostname = "smtp.example.com"
 const template = `Warning: you are using %d bytes of storage, 
 %d%% of your quota.`
 
-
 var notifyUser = func(username, msg string) {
 	auth := smtp.PlainAuth("", sender, password, hostname)
-	if err := smtp.SendMail(hostname + ":587", auth, sender,
+	if err := smtp.SendMail(hostname+":587", auth, sender,
 		[]string{username}, []byte(msg)); err != nil {
-			log.Printf("smtp.SendEmail(%s) failed: %s", username, err)
+		log.Printf("smtp.SendEmail(%s) failed: %s", username, err)
 	}
 }
-
 
 func CheckQuota(username string) {
 	used := bytesInUse(username)

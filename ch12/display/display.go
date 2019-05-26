@@ -40,7 +40,7 @@ func display(path string, v reflect.Value) {
 			fmt.Printf("%s = nil\n", path)
 		} else {
 			fmt.Printf("%s.type = %s\n", path, v.Elem().Type())
-			display(path+ ".value", v.Elem())
+			display(path+".value", v.Elem())
 		}
 	default: // basic types, channels, funcs
 		fmt.Printf("%s = %s\n", path, format.FormatAtom(v))

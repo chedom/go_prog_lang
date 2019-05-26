@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func encode(buf *bytes.Buffer,v reflect.Value, indent int) error {
+func encode(buf *bytes.Buffer, v reflect.Value, indent int) error {
 	switch v.Kind() {
 	case reflect.Invalid:
 		buf.WriteString("null")
@@ -36,7 +36,7 @@ func encode(buf *bytes.Buffer,v reflect.Value, indent int) error {
 				return err
 			}
 
-			if i != v.Len() - 1 {
+			if i != v.Len()-1 {
 				buf.WriteByte(',')
 			}
 		}
@@ -51,10 +51,10 @@ func encode(buf *bytes.Buffer,v reflect.Value, indent int) error {
 			}
 			start := buf.Len()
 			fmt.Fprintf(buf, "%q: ", v.Type().Field(i).Name)
-			if err := encode(buf, v.Field(i), indent + buf.Len() - start); err != nil {
+			if err := encode(buf, v.Field(i), indent+buf.Len()-start); err != nil {
 				return err
 			}
-			if i != v.NumField() - 1 {
+			if i != v.NumField()-1 {
 				buf.WriteByte(',')
 			}
 		}
@@ -72,10 +72,10 @@ func encode(buf *bytes.Buffer,v reflect.Value, indent int) error {
 				return err
 			}
 			buf.WriteString(": ")
-			if err := encode(buf, v.MapIndex(key), indent + buf.Len() - start); err != nil {
+			if err := encode(buf, v.MapIndex(key), indent+buf.Len()-start); err != nil {
 				return err
 			}
-			if i != len(v.MapKeys()) - 1 {
+			if i != len(v.MapKeys())-1 {
 				buf.WriteByte(',')
 			}
 		}
@@ -87,7 +87,6 @@ func encode(buf *bytes.Buffer,v reflect.Value, indent int) error {
 		} else {
 			buf.WriteString("false")
 		}
-
 
 	case reflect.Float32, reflect.Float64:
 		fmt.Fprintf(buf, "%g", v.Float())

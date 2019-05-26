@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func encode(buf *bytes.Buffer,v reflect.Value) error {
+func encode(buf *bytes.Buffer, v reflect.Value) error {
 	switch v.Kind() {
 	case reflect.Invalid:
 		buf.WriteString("nil")
@@ -76,7 +76,6 @@ func encode(buf *bytes.Buffer,v reflect.Value) error {
 		} else {
 			buf.WriteString("nil")
 		}
-
 
 	case reflect.Float32, reflect.Float64:
 		fmt.Fprintf(buf, "%g", v.Float())

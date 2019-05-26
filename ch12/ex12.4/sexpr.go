@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func encode(buf *bytes.Buffer,v reflect.Value, indent int) error {
+func encode(buf *bytes.Buffer, v reflect.Value, indent int) error {
 	switch v.Kind() {
 	case reflect.Invalid:
 		buf.WriteString("nil")
@@ -47,7 +47,7 @@ func encode(buf *bytes.Buffer,v reflect.Value, indent int) error {
 			}
 			start := buf.Len()
 			fmt.Fprintf(buf, "(%s ", v.Type().Field(i).Name)
-			if err := encode(buf, v.Field(i), indent + buf.Len() - start); err != nil {
+			if err := encode(buf, v.Field(i), indent+buf.Len()-start); err != nil {
 				return err
 			}
 			buf.WriteByte(')')
@@ -67,7 +67,7 @@ func encode(buf *bytes.Buffer,v reflect.Value, indent int) error {
 				return err
 			}
 			buf.WriteByte(' ')
-			if err := encode(buf, v.MapIndex(key), indent + buf.Len() - start); err != nil {
+			if err := encode(buf, v.MapIndex(key), indent+buf.Len()-start); err != nil {
 				return err
 			}
 			buf.WriteByte(')')
@@ -81,7 +81,6 @@ func encode(buf *bytes.Buffer,v reflect.Value, indent int) error {
 		} else {
 			buf.WriteString("nil")
 		}
-
 
 	case reflect.Float32, reflect.Float64:
 		fmt.Fprintf(buf, "%g", v.Float())

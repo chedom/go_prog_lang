@@ -31,7 +31,7 @@ func formatMapKey(v reflect.Value) string {
 		buf := &bytes.Buffer{}
 		buf.WriteByte('{')
 
-		for i:= 0; i < v.NumField(); i++ {
+		for i := 0; i < v.NumField(); i++ {
 			if i != 0 {
 				buf.WriteByte(',')
 			}
@@ -75,7 +75,7 @@ func display(path string, v reflect.Value) {
 			fmt.Printf("%s = nil\n", path)
 		} else {
 			fmt.Printf("%s.type = %s\n", path, v.Elem().Type())
-			display(path+ ".value", v.Elem())
+			display(path+".value", v.Elem())
 		}
 	default: // basic types, channels, funcs
 		fmt.Printf("%s = %s\n", path, format.FormatAtom(v))
