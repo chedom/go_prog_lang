@@ -11,7 +11,7 @@ import (
 func Pack(data interface{}) (url.URL, error) {
 	// Build map of fields keyed by effective name
 	fields := make(map[string]reflect.Value)
-	v:= reflect.ValueOf(data).Elem()
+	v := reflect.ValueOf(data).Elem()
 	for i := 0; i < v.NumField(); i++ {
 		fieldInfo := v.Type().Field(i)
 		tag := fieldInfo.Tag

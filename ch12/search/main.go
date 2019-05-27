@@ -9,10 +9,10 @@ import (
 )
 
 func search(resp http.ResponseWriter, req *http.Request) {
-	var data struct{
-		Labels []string `http:"l"`
-		MaxResult int `http:"max"`
-		Exact bool `http:"x"`
+	var data struct {
+		Labels    []string `http:"l"`
+		MaxResult int      `http:"max"`
+		Exact     bool     `http:"x"`
 	}
 
 	data.MaxResult = 10

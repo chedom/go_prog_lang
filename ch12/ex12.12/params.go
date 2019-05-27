@@ -8,9 +8,11 @@ import (
 	"strings"
 )
 
+type Check func(v interface{}) error
+
 // Unpack populates the fields of the struct pointed to by ptr
 // from the HTTP request parameters in req.
-func Unpack(req *http.Request, ptr interface{}) error {
+func Unpack(req *http.Request, ptr interface{}, checks map[string]Check) error {
 	if err := req.ParseForm(); err != nil {
 		return err
 	}
@@ -25,6 +27,16 @@ func Unpack(req *http.Request, ptr interface{}) error {
 		if name == "" {
 			name = strings.ToLower(fieldInfo.Name)
 		}
+		checkName := tag.Get("check")
+		if checkName != "" {
+			if check, ok := checks[checkName]; ok {
+				if err := check(v.Field(i).Interface()); err != nil {
+					return err
+				}
+
+			}
+		}
+
 		fields[name] = v.Field(i)
 	}
 
